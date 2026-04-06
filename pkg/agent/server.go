@@ -14,12 +14,12 @@ import (
 // Server implements the GPUAgentService gRPC server.
 type Server struct {
 	pb.UnimplementedGPUAgentServiceServer
-	gpuCollector *gpu.Collector
-	podClient    *podresources.Client
+	gpuCollector gpu.MetricsCollector
+	podClient    podresources.PodMapper
 	nodeName     string
 }
 
-// NewServer creates a new agent gRPC server.
+// NewServer creates a new agent gRPC server with default NVML and kubelet backends.
 func NewServer(podResourcesSocket string) *Server {
 	nodeName, _ := os.Hostname()
 	if n := os.Getenv("NODE_NAME"); n != "" {
@@ -28,6 +28,15 @@ func NewServer(podResourcesSocket string) *Server {
 	return &Server{
 		gpuCollector: gpu.NewCollector(),
 		podClient:    podresources.NewClient(podResourcesSocket),
+		nodeName:     nodeName,
+	}
+}
+
+// NewServerWithDeps creates a server with injected dependencies (for testing).
+func NewServerWithDeps(collector gpu.MetricsCollector, mapper podresources.PodMapper, nodeName string) *Server {
+	return &Server{
+		gpuCollector: collector,
+		podClient:    mapper,
 		nodeName:     nodeName,
 	}
 }

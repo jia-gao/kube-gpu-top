@@ -24,6 +24,11 @@ type PodGPUMapping struct {
 	Container string
 }
 
+// PodMapper is the interface for getting GPU-to-pod mappings.
+type PodMapper interface {
+	GetGPUPodMapping(ctx context.Context) (map[string]PodGPUMapping, error)
+}
+
 // Client queries the kubelet Pod Resources API.
 type Client struct {
 	socketPath string

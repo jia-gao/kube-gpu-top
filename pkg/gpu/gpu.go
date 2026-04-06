@@ -22,6 +22,11 @@ type DeviceMetrics struct {
 	PIDs           []uint32 // Compute processes running on this GPU
 }
 
+// MetricsCollector is the interface for collecting GPU metrics.
+type MetricsCollector interface {
+	Collect() ([]DeviceMetrics, error)
+}
+
 // Collector gathers GPU metrics via NVML.
 type Collector struct{}
 
