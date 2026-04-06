@@ -325,7 +325,7 @@ const file_gpuagent_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
 	"\tcontainer\x18\x03 \x01(\tR\tcontainer2Z\n" +
 	"\x0fGPUAgentService\x12G\n" +
-	"\fGetGPUStatus\x12\x1a.gpuagent.GPUStatusRequest\x1a\x1b.gpuagent.GPUStatusResponseB1Z/github.com/jiazhougao/kube-gpu-top/api/gpuagentb\x06proto3"
+	"\fGetGPUStatus\x12\x1a.gpuagent.GPUStatusRequest\x1a\x1b.gpuagent.GPUStatusResponseB.Z,github.com/jia-gao/kube-gpu-top/api/gpuagentb\x06proto3"
 
 var (
 	file_gpuagent_proto_rawDescOnce sync.Once

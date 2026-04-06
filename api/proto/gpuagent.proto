@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package gpuagent;
 
-option go_package = "github.com/jiazhougao/kube-gpu-top/api/gpuagent";
+option go_package = "github.com/jia-gao/kube-gpu-top/api/gpuagent";
 
 service GPUAgentService {
   rpc GetGPUStatus(GPUStatusRequest) returns (GPUStatusResponse);

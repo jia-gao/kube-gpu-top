@@ -1,4 +1,4 @@
-module github.com/jiazhougao/kube-gpu-top
+module github.com/jia-gao/kube-gpu-top
 
 go 1.26.1
 

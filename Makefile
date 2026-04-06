@@ -1,6 +1,6 @@
 BINARY_CLI = kubectl-gpu_top
 BINARY_AGENT = kube-gpu-agent
-IMAGE_REPO = ghcr.io/jiazhougao/kube-gpu-agent
+IMAGE_REPO = ghcr.io/jia-gao/kube-gpu-agent
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
 .PHONY: all proto build build-cli build-agent test lint clean docker-build docker-push

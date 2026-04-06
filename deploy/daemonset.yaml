@@ -28,7 +28,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: agent
-          image: ghcr.io/jiazhougao/kube-gpu-agent:latest
+          image: ghcr.io/jia-gao/kube-gpu-agent:latest
           ports:
             - containerPort: 9401
               name: grpc

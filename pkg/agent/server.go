@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"os"
 
-	pb "github.com/jiazhougao/kube-gpu-top/api/gpuagent"
-	"github.com/jiazhougao/kube-gpu-top/pkg/gpu"
-	"github.com/jiazhougao/kube-gpu-top/pkg/podresources"
+	pb "github.com/jia-gao/kube-gpu-top/api/gpuagent"
+	"github.com/jia-gao/kube-gpu-top/pkg/gpu"
+	"github.com/jia-gao/kube-gpu-top/pkg/podresources"
 )
 
 // Server implements the GPUAgentService gRPC server.

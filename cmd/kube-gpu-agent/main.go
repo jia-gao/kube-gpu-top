@@ -11,9 +11,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "github.com/jiazhougao/kube-gpu-top/api/gpuagent"
-	"github.com/jiazhougao/kube-gpu-top/pkg/agent"
-	"github.com/jiazhougao/kube-gpu-top/pkg/gpu"
+	pb "github.com/jia-gao/kube-gpu-top/api/gpuagent"
+	"github.com/jia-gao/kube-gpu-top/pkg/agent"
+	"github.com/jia-gao/kube-gpu-top/pkg/gpu"
 )
 
 func main() {

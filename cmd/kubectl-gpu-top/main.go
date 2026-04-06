@@ -16,7 +16,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 
-	pb "github.com/jiazhougao/kube-gpu-top/api/gpuagent"
+	pb "github.com/jia-gao/kube-gpu-top/api/gpuagent"
 )
 
 const agentPort = 9401
@@ -55,7 +55,7 @@ func main() {
 
 	if len(pods.Items) == 0 {
 		fmt.Println("No kube-gpu-agent pods found. Is the DaemonSet deployed?")
-		fmt.Println("  kubectl apply -f https://github.com/jiazhougao/kube-gpu-top/deploy/daemonset.yaml")
+		fmt.Println("  kubectl apply -f https://github.com/jia-gao/kube-gpu-top/deploy/daemonset.yaml")
 		os.Exit(1)
 	}
 
