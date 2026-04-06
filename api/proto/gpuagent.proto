@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package gpuagent;
+
+option go_package = "github.com/jiazhougao/kube-gpu-top/api/gpuagent";
+
+service GPUAgentService {
+  rpc GetGPUStatus(GPUStatusRequest) returns (GPUStatusResponse);
+}
+
+message GPUStatusRequest {}
+
+message GPUStatusResponse {
+  string node_name = 1;
+  repeated GPUDevice devices = 2;
+}
+
+message GPUDevice {
+  string uuid = 1;
+  string name = 2;         // e.g. "NVIDIA A100-SXM4-80GB"
+  uint32 index = 3;
+
+  // Utilization
+  uint32 gpu_utilization = 4;   // 0-100%
+  uint32 mem_utilization = 5;   // 0-100%
+
+  // Memory
+  uint64 mem_used_bytes = 6;
+  uint64 mem_total_bytes = 7;
+
+  // Thermal & Power
+  uint32 temperature_c = 8;
+  uint32 power_watts = 9;
+  uint32 power_limit_watts = 10;
+
+  // Pod attribution (empty if no pod is using this GPU)
+  PodInfo pod = 11;
+}
+
+message PodInfo {
+  string namespace = 1;
+  string name = 2;
+  string container = 3;
+}
