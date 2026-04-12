@@ -4,7 +4,11 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /kube-gpu-agent ./cmd/kube-gpu-agent/
+# go-nvml requires CGO; it uses dlopen at runtime to find libnvidia-ml.so,
+# so the resulting binary does not need to link against CUDA at build time.
+# The runtime stage is Ubuntu-based (glibc), so no static-linking gymnastics
+# are needed.
+RUN CGO_ENABLED=1 go build -ldflags="-s -w" -o /kube-gpu-agent ./cmd/kube-gpu-agent/
 
 FROM nvidia/cuda:12.9.0-base-ubuntu24.04
 
