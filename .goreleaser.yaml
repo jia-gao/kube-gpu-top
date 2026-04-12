@@ -1,0 +1,96 @@
+# GoReleaser config for kube-gpu-top.
+#
+# Only the CLI (kubectl-gpu-top) is released here — the agent ships as a
+# container image, built by the separate `agent-image` job in the release
+# workflow.
+#
+# Archive names match the Krew manifest at plugins/gpu-top.yaml exactly:
+#   kubectl-gpu-top_v<tag>_<os>_<arch>.tar.gz
+#
+# To cut a release:
+#   git tag v0.1.0 && git push origin v0.1.0
+# GitHub Actions will do the rest.
+version: 2
+
+project_name: kube-gpu-top
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: kubectl-gpu-top
+    main: ./cmd/kubectl-gpu-top/
+    binary: kubectl-gpu-top
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }} -X main.commit={{ .Commit }} -X main.date={{ .Date }}
+
+archives:
+  - id: kubectl-gpu-top
+    ids:
+      - kubectl-gpu-top
+    # IMPORTANT: this template must stay in sync with plugins/gpu-top.yaml.
+    # `{{ .Tag }}` keeps the leading "v" (v0.1.0), which Krew expects.
+    name_template: "kubectl-gpu-top_{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
+    formats:
+      - tar.gz
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "Merge pull request"
+      - "Merge branch"
+
+release:
+  github:
+    owner: jia-gao
+    name: kube-gpu-top
+  draft: false
+  prerelease: auto
+  header: |
+    ## kube-gpu-top {{ .Tag }}
+
+    The missing `kubectl top` for GPUs. Per-pod GPU utilization, memory,
+    temperature, and power across every node in your cluster — plus waste
+    detection with cost estimates.
+  footer: |
+    ---
+    **Install the CLI via Krew** (once the manifest is merged to krew-index):
+    ```
+    kubectl krew install gpu-top
+    ```
+
+    **Install the agent DaemonSet**:
+    ```
+    kubectl apply -f https://raw.githubusercontent.com/jia-gao/kube-gpu-top/{{ .Tag }}/deploy/daemonset.yaml
+    ```
+
+    **Agent container image**: `ghcr.io/jia-gao/kube-gpu-agent:{{ .Tag }}`
+
+    **Updating the Krew manifest**: copy the sha256 values from
+    `checksums.txt` below into `plugins/gpu-top.yaml`, update the version
+    string, and open a PR against `kubernetes-sigs/krew-index`.
