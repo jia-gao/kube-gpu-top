@@ -2,15 +2,9 @@
 
 **The missing `kubectl top` for GPUs.**
 
-```
-$ kubectl gpu top
-NODE            NAMESPACE    POD                      GPU        UTIL   MEM USED    MEM TOTAL   TEMP   POWER
-gpu-node-01    ml-team      train-llama-70b-0        A100-80GB  94%    71.2 GiB    80.0 GiB    72°C   298W
-gpu-node-01    ml-team      train-llama-70b-1        A100-80GB  91%    68.5 GiB    80.0 GiB    70°C   285W
-gpu-node-02    inference    vllm-serve-7b-abc12      A100-80GB  45%    14.2 GiB    80.0 GiB    58°C   165W
-gpu-node-02    inference    vllm-serve-7b-def34      A100-80GB  12%     8.1 GiB    80.0 GiB    42°C    95W
-gpu-node-03    dev          notebook-alice-gpu       A100-80GB   3%     2.1 GiB    80.0 GiB    35°C    62W
-```
+<p align="center">
+  <img src="assets/demo.svg" alt="kube-gpu-top demo" width="800">
+</p>
 
 One command. Every GPU across every node. Pod-level attribution. No dashboards required.
 
