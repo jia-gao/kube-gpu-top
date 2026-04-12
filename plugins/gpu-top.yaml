@@ -43,7 +43,7 @@ spec:
           os: linux
           arch: amd64
       uri: https://github.com/jia-gao/kube-gpu-top/releases/download/v0.1.0/kubectl-gpu-top_v0.1.0_linux_amd64.tar.gz
-      sha256: REPLACE_WITH_SHA256_linux_amd64
+      sha256: 9b7d12b69483ee8814d346f77e7bdd3b084f85f45e4de792d467ef2cef3e66c5
       bin: kubectl-gpu-top
       files:
         - from: kubectl-gpu-top
@@ -55,7 +55,7 @@ spec:
           os: linux
           arch: arm64
       uri: https://github.com/jia-gao/kube-gpu-top/releases/download/v0.1.0/kubectl-gpu-top_v0.1.0_linux_arm64.tar.gz
-      sha256: REPLACE_WITH_SHA256_linux_arm64
+      sha256: 1d91bde1d83cdcc8a2a35dbff1d371871c6f8c82ff2e9a363002e8f64e498a1b
       bin: kubectl-gpu-top
       files:
         - from: kubectl-gpu-top
@@ -67,7 +67,7 @@ spec:
           os: darwin
           arch: amd64
       uri: https://github.com/jia-gao/kube-gpu-top/releases/download/v0.1.0/kubectl-gpu-top_v0.1.0_darwin_amd64.tar.gz
-      sha256: REPLACE_WITH_SHA256_darwin_amd64
+      sha256: ab6463b03c1830d6533d7af9b6a7b67b6f6d9c582b9fe87874b7bad9da2c43d0
       bin: kubectl-gpu-top
       files:
         - from: kubectl-gpu-top
@@ -79,7 +79,7 @@ spec:
           os: darwin
           arch: arm64
       uri: https://github.com/jia-gao/kube-gpu-top/releases/download/v0.1.0/kubectl-gpu-top_v0.1.0_darwin_arm64.tar.gz
-      sha256: REPLACE_WITH_SHA256_darwin_arm64
+      sha256: b9f4355d0f4649f389b065aa522e1f1c3e0faa37a844a882fe581b84b7f843a1
       bin: kubectl-gpu-top
       files:
         - from: kubectl-gpu-top
