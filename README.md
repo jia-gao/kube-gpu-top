@@ -40,19 +40,19 @@ Checking GPU utilization in Kubernetes today is harder than it should be:
 │  GPU Node (DaemonSet: kube-gpu-agent)                        │
 │                                                              │
 │  ┌─────────────────┐       ┌──────────────────────────────┐  │
-│  │   go-nvml        │       │  kubelet Pod Resources API   │  │
-│  │                  │       │  /var/lib/kubelet/            │  │
-│  │  GPU UUID        │       │  pod-resources/kubelet.sock   │  │
-│  │  Utilization     │       │                              │  │
-│  │  Memory          │       │  GPU UUID ──► Pod/Namespace  │  │
-│  │  Temperature     │       │                              │  │
-│  │  Power           │       └──────────────┬───────────────┘  │
-│  └────────┬─────────┘                      │                  │
-│           │            JOIN on GPU UUID     │                  │
-│           └────────────────┬───────────────┘                  │
-│                            ▼                                  │
-│                   GPUStatusResponse                           │
-│            (metrics + pod attribution)                        │
+│  │   go-nvml       │       │  kubelet Pod Resources API   │  │
+│  │                 │       │  /var/lib/kubelet/           │  │
+│  │  GPU UUID       │       │  pod-resources/kubelet.sock  │  │
+│  │  Utilization    │       │                              │  │
+│  │  Memory         │       │  GPU UUID ──► Pod/Namespace  │  │
+│  │  Temperature    │       │                              │  │
+│  │  Power          │       └──────────────┬───────────────┘  │
+│  └────────┬────────┘                      │                  │
+│           │            JOIN on GPU UUID   │                  │
+│           └────────────────┬──────────────┘                  │
+│                            ▼                                 │
+│                   GPUStatusResponse                          │
+│            (metrics + pod attribution)                       │
 └──────────────────────────────────────────────────────────────┘
 ```
 
