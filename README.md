@@ -25,7 +25,7 @@ Checking GPU utilization in Kubernetes today is harder than it should be:
 ┌──────────────────────────────────────────────────────────────┐
 │  User Machine                                                │
 │                                                              │
-│  kubectl gpu top ──── K8s API ── discover agent pods         │
+│  kubectl gpu-top ──── K8s API ── discover agent pods         │
 │         │                                                    │
 └─────────┼────────────────────────────────────────────────────┘
           │ gRPC :9401
@@ -69,19 +69,35 @@ The agent runs only on nodes with `nvidia.com/gpu.present=true` and requests min
 **2. Install the CLI:**
 
 ```bash
+# Option A: Download the prebuilt binary (no Go required)
+curl -sL https://github.com/jia-gao/kube-gpu-top/releases/latest/download/kubectl-gpu-top_v0.1.0_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz | tar xz
+sudo mv kubectl-gpu-top /usr/local/bin/
+
+# Option B: Via Go
 go install github.com/jia-gao/kube-gpu-top/cmd/kubectl-gpu-top@latest
 ```
 
-**3. Run it:**
+**3. See every GPU in your cluster:**
 
 ```bash
-kubectl gpu top
+kubectl gpu-top
 ```
 
-Filter by namespace:
+**4. Find wasted GPUs with cost estimates:**
 
 ```bash
-kubectl gpu top --namespace ml-team
+kubectl gpu-top waste
+```
+
+This polls all GPUs for 60 seconds and flags any that are idle or holding memory but not computing. Output includes an estimated monthly cost per wasted GPU.
+
+**Options:**
+
+```bash
+kubectl gpu-top top --namespace ml-team          # filter by namespace
+kubectl gpu-top waste --duration 5m              # longer sampling window
+kubectl gpu-top waste --util-threshold 10        # flag GPUs below 10% util
+kubectl gpu-top waste --hourly-rate 1.20         # override cost per GPU-hour
 ```
 
 ## Building from Source
@@ -99,9 +115,6 @@ make build-cli
 # Build the agent container image
 make docker-build
 
-# Run protobuf codegen (requires protoc)
-make proto
-
 # Run tests
 make test
 ```
@@ -118,11 +131,15 @@ Binaries are output to `bin/`.
 
 - [x] Core agent with go-nvml + Pod Resources API
 - [x] CLI table output with namespace filtering
-- [ ] Time-slicing GPU support (PID-to-cgroup mapping)
-- [ ] Interactive TUI mode (bubbletea)
-- [ ] Waste detection (`kubectl gpu waste`)
+- [x] Waste detection with cost estimates (`kubectl gpu-top waste`)
+- [x] Krew plugin manifest
+- [x] Prebuilt binaries (linux/darwin × amd64/arm64)
+- [x] Multi-arch agent container image
 - [ ] Helm chart
-- [ ] Krew plugin distribution
+- [ ] Interactive TUI mode (bubbletea)
+- [ ] Time-slicing and MIG support
+- [ ] Historical mode (read from Prometheus instead of polling)
+- [ ] Slack / webhook alerts for idle GPUs
 
 ## License
 
