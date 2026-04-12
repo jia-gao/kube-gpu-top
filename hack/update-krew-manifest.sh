@@ -53,8 +53,12 @@ gh release download "$VERSION" \
   --pattern "checksums.txt" \
   --dir "$tmp"
 
-# Parse sha256 for each platform tarball.
-declare -A shas
+# Parse sha256 for each platform tarball. Plain variables (not an
+# associative array) so this runs on macOS's stock bash 3.2.
+sha_linux_amd64=""
+sha_linux_arm64=""
+sha_darwin_amd64=""
+sha_darwin_arm64=""
 for platform in linux_amd64 linux_arm64 darwin_amd64 darwin_arm64; do
   file="kubectl-gpu-top_${VERSION}_${platform}.tar.gz"
   sha=$(awk -v f="$file" '$2==f {print $1}' "$tmp/checksums.txt")
@@ -64,14 +68,19 @@ for platform in linux_amd64 linux_arm64 darwin_amd64 darwin_arm64; do
     cat "$tmp/checksums.txt" >&2
     exit 1
   fi
-  shas[$platform]="$sha"
+  case "$platform" in
+    linux_amd64)  sha_linux_amd64="$sha" ;;
+    linux_arm64)  sha_linux_arm64="$sha" ;;
+    darwin_amd64) sha_darwin_amd64="$sha" ;;
+    darwin_arm64) sha_darwin_arm64="$sha" ;;
+  esac
   printf '   %-14s  %s\n' "$platform" "$sha"
 done
 
 echo ">> rewriting $MANIFEST"
 python3 - "$MANIFEST" "$VERSION" \
-  "${shas[linux_amd64]}" "${shas[linux_arm64]}" \
-  "${shas[darwin_amd64]}" "${shas[darwin_arm64]}" <<'PY'
+  "$sha_linux_amd64" "$sha_linux_arm64" \
+  "$sha_darwin_amd64" "$sha_darwin_arm64" <<'PY'
 import re
 import sys
 
@@ -126,10 +135,12 @@ with open(path, 'w') as f:
     f.write(text)
 PY
 
-# Sanity check: no placeholders left.
-if grep -q REPLACE_WITH_SHA256 "$MANIFEST"; then
-  echo "error: manifest still contains REPLACE_WITH_SHA256 placeholders" >&2
-  grep -n REPLACE_WITH_SHA256 "$MANIFEST" >&2
+# Sanity check: no placeholder sha256 values left. Only inspect real
+# `sha256:` lines so the header comment (which documents the placeholder
+# string) doesn't false-positive.
+if grep -E '^\s*sha256:\s*REPLACE_WITH_SHA256' "$MANIFEST" >/dev/null; then
+  echo "error: one or more sha256 fields still hold placeholder values" >&2
+  grep -nE '^\s*sha256:\s*REPLACE_WITH_SHA256' "$MANIFEST" >&2
   exit 1
 fi
 
