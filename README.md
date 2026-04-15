@@ -69,11 +69,14 @@ The agent runs only on nodes with `nvidia.com/gpu.present=true` and requests min
 **2. Install the CLI:**
 
 ```bash
-# Option A: Download the prebuilt binary (no Go required)
+# Option A: Via Krew (recommended)
+kubectl krew install gpu-top
+
+# Option B: Download the prebuilt binary
 curl -sL https://github.com/jia-gao/kube-gpu-top/releases/latest/download/kubectl-gpu-top_v0.1.0_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz | tar xz
 sudo mv kubectl-gpu-top /usr/local/bin/
 
-# Option B: Via Go
+# Option C: Via Go
 go install github.com/jia-gao/kube-gpu-top/cmd/kubectl-gpu-top@latest
 ```
 
