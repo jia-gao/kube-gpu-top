@@ -127,7 +127,7 @@ Binaries are output to `bin/`.
 ## Requirements
 
 - Kubernetes 1.20+
-- NVIDIA GPUs with drivers installed on worker nodes
+- **NVIDIA GPUs** with drivers installed on worker nodes (AMD/Intel GPU support is on the roadmap — see [#1](https://github.com/jia-gao/kube-gpu-top/issues/1))
 - [NVIDIA device plugin](https://github.com/NVIDIA/k8s-device-plugin) deployed (standard in most GPU clusters)
 
 ## Roadmap
@@ -139,6 +139,7 @@ Binaries are output to `bin/`.
 - [x] Prebuilt binaries (linux/darwin × amd64/arm64)
 - [x] Multi-arch agent container image
 - [ ] Helm chart
+- [ ] AMD/Intel GPU support ([#1](https://github.com/jia-gao/kube-gpu-top/issues/1))
 - [ ] Interactive TUI mode (bubbletea)
 - [ ] Time-slicing and MIG support
 - [ ] Historical mode (read from Prometheus instead of polling)
