@@ -61,10 +61,16 @@ It joins the two by GPU UUID and serves the result over gRPC. The CLI discovers 
 **1. Deploy the agent DaemonSet:**
 
 ```bash
+# Option A: Via Helm (recommended)
+helm install kube-gpu-top oci://ghcr.io/jia-gao/charts/kube-gpu-top
+
+# Option B: Plain manifest
 kubectl apply -f https://raw.githubusercontent.com/jia-gao/kube-gpu-top/main/deploy/daemonset.yaml
 ```
 
 The agent runs only on nodes with `nvidia.com/gpu.present=true` and requests minimal resources (10m CPU, 32Mi memory).
+
+Helm lets you customize the NVIDIA driver path, resource limits, and tolerations via `values.yaml`. See [charts/kube-gpu-top/values.yaml](charts/kube-gpu-top/values.yaml) for all options.
 
 **2. Install the CLI:**
 
@@ -138,7 +144,7 @@ Binaries are output to `bin/`.
 - [x] Krew plugin manifest
 - [x] Prebuilt binaries (linux/darwin × amd64/arm64)
 - [x] Multi-arch agent container image
-- [ ] Helm chart
+- [x] Helm chart
 - [ ] AMD/Intel GPU support ([#1](https://github.com/jia-gao/kube-gpu-top/issues/1))
 - [ ] Interactive TUI mode (bubbletea)
 - [ ] Time-slicing and MIG support

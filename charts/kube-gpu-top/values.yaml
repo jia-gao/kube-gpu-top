@@ -1,0 +1,37 @@
+# kube-gpu-top Helm chart values
+
+image:
+  repository: ghcr.io/jia-gao/kube-gpu-agent
+  tag: "v0.1.0"
+  pullPolicy: IfNotPresent
+
+# Namespace for the agent DaemonSet
+namespace: kube-gpu-system
+
+# Node selector for GPU nodes
+nodeSelector:
+  nvidia.com/gpu.present: "true"
+
+# Tolerations for GPU-tainted nodes
+tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+
+# Agent resource limits
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+
+# gRPC port the agent listens on
+agentPort: 9401
+
+# Host path to the kubelet pod-resources socket
+podResourcesPath: /var/lib/kubelet/pod-resources
+
+# Host path to the NVIDIA driver libraries
+nvidiaDriverPath: /usr/lib/x86_64-linux-gnu
