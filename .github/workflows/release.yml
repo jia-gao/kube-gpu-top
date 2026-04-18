@@ -7,6 +7,8 @@ name: Release
 #      (linux/darwin × amd64/arm64) and a checksums.txt — consumed by Krew.
 #   2. Multi-arch agent container image at ghcr.io/jia-gao/kube-gpu-agent:<tag>
 #      (and :latest), built from Dockerfile.agent.
+#   3. Helm chart OCI artifact at ghcr.io/jia-gao/charts/kube-gpu-top:<version>
+#      installable via: helm install kube-gpu-top oci://ghcr.io/jia-gao/charts/kube-gpu-top
 #
 # After this workflow finishes, update plugins/gpu-top.yaml with the four
 # sha256 values from the release's checksums.txt and open a PR against
@@ -104,3 +106,42 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false
+
+  helm-chart:
+    name: Helm chart OCI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            VERSION="${{ github.event.inputs.tag }}"
+          else
+            VERSION="${GITHUB_REF_NAME}"
+          fi
+          # Strip leading 'v' for Helm chart version (v0.1.0 → 0.1.0)
+          echo "chart_version=${VERSION#v}" >> "$GITHUB_OUTPUT"
+          echo "app_version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Update Chart.yaml version
+        run: |
+          sed -i "s/^version:.*/version: ${{ steps.version.outputs.chart_version }}/" charts/kube-gpu-top/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${{ steps.version.outputs.app_version }}\"/" charts/kube-gpu-top/Chart.yaml
+          cat charts/kube-gpu-top/Chart.yaml
+
+      - name: Package chart
+        run: helm package charts/kube-gpu-top
+
+      - name: Push to GHCR
+        run: helm push kube-gpu-top-${{ steps.version.outputs.chart_version }}.tgz oci://ghcr.io/jia-gao/charts
