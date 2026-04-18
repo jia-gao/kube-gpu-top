@@ -146,7 +146,7 @@ Binaries are output to `bin/`.
 - [x] Multi-arch agent container image
 - [x] Helm chart
 - [ ] AMD/Intel GPU support ([#1](https://github.com/jia-gao/kube-gpu-top/issues/1))
-- [ ] Interactive TUI mode (bubbletea)
+- [x] Interactive TUI mode (bubbletea)
 - [ ] Time-slicing and MIG support
 - [ ] Historical mode (read from Prometheus instead of polling)
 - [ ] Slack / webhook alerts for idle GPUs
