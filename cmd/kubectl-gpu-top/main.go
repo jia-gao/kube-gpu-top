@@ -20,6 +20,8 @@ func main() {
 			sub, args = "top", args[1:]
 		case "waste":
 			sub, args = "waste", args[1:]
+		case "tui":
+			sub, args = "tui", args[1:]
 		case "-h", "--help", "help":
 			printUsage()
 			return
@@ -29,6 +31,8 @@ func main() {
 	switch sub {
 	case "waste":
 		runWaste(args)
+	case "tui":
+		runTUI(args)
 	default:
 		runTop(args)
 	}
@@ -40,6 +44,7 @@ func printUsage() {
 Commands:
   top      Show GPU utilization per pod across the cluster (default)
   waste    Detect wasted GPUs and estimate their cost
+  tui      Interactive terminal UI with auto-refresh and sorting
 
 Run 'kubectl gpu-top <command> -h' for command-specific flags.`)
 }
