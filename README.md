@@ -61,8 +61,8 @@ It joins the two by GPU UUID and serves the result over gRPC. The CLI discovers 
 **1. Deploy the agent DaemonSet:**
 
 ```bash
-# Option A: Via Helm (recommended)
-helm install kube-gpu-top oci://ghcr.io/jia-gao/charts/kube-gpu-top
+# Option A: Via Helm
+git clone https://github.com/jia-gao/kube-gpu-top.git && helm install kube-gpu-top ./kube-gpu-top/charts/kube-gpu-top
 
 # Option B: Plain manifest
 kubectl apply -f https://raw.githubusercontent.com/jia-gao/kube-gpu-top/main/deploy/daemonset.yaml
