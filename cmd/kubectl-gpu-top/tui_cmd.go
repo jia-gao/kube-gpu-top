@@ -17,7 +17,7 @@ import (
 // runTUI launches the interactive bubbletea TUI.
 func runTUI(args []string) {
 	fs := flag.NewFlagSet("tui", flag.ExitOnError)
-	kubeconfig := fs.String("kubeconfig", "", "path to kubeconfig (default: ~/.kube/config)")
+	kubeconfig := fs.String("kubeconfig", "", "path to kubeconfig (default: $KUBECONFIG, then ~/.kube/config)")
 	namespace := fs.String("namespace", "", "initial namespace filter (default: all)")
 	interval := fs.Duration("interval", 2*time.Second, "data refresh interval")
 	_ = fs.Parse(args)
