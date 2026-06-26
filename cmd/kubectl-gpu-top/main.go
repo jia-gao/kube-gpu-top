@@ -53,7 +53,7 @@ Run 'kubectl gpu-top <command> -h' for command-specific flags.`)
 func runTop(args []string) {
 	fs := flag.NewFlagSet("top", flag.ExitOnError)
 	namespace := fs.String("namespace", "", "filter by namespace (default: all)")
-	kubeconfig := fs.String("kubeconfig", "", "path to kubeconfig (default: ~/.kube/config)")
+	kubeconfig := fs.String("kubeconfig", "", "path to kubeconfig (default: $KUBECONFIG, then ~/.kube/config)")
 	_ = fs.Parse(args)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

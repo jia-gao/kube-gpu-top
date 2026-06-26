@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -22,19 +21,26 @@ const (
 	agentLabelSelector = "app=kube-gpu-agent"
 )
 
-// buildClientset constructs a Kubernetes clientset from an explicit
-// kubeconfig path, or falls back to ~/.kube/config.
-func buildClientset(kubeconfig string) (*kubernetes.Clientset, error) {
-	var (
-		config *rest.Config
-		err    error
-	)
+// loadRESTConfig resolves a Kubernetes REST config using the same precedence
+// as kubectl: an explicit --kubeconfig path wins, otherwise the $KUBECONFIG
+// environment variable (a path or os.PathListSeparator-joined list, merged in
+// order), otherwise ~/.kube/config.
+func loadRESTConfig(kubeconfig string) (*rest.Config, error) {
+	// NewDefaultClientConfigLoadingRules() already honors $KUBECONFIG and
+	// falls back to the recommended home file (~/.kube/config).
+	rules := clientcmd.NewDefaultClientConfigLoadingRules()
 	if kubeconfig != "" {
-		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
-	} else {
-		home, _ := os.UserHomeDir()
-		config, err = clientcmd.BuildConfigFromFlags("", home+"/.kube/config")
+		rules.ExplicitPath = kubeconfig
 	}
+	return clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		rules, &clientcmd.ConfigOverrides{},
+	).ClientConfig()
+}
+
+// buildClientset constructs a Kubernetes clientset, resolving the kubeconfig
+// via loadRESTConfig (explicit flag > $KUBECONFIG > ~/.kube/config).
+func buildClientset(kubeconfig string) (*kubernetes.Clientset, error) {
+	config, err := loadRESTConfig(kubeconfig)
 	if err != nil {
 		return nil, err
 	}

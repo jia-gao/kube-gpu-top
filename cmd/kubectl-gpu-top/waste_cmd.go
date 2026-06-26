@@ -21,7 +21,7 @@ func runWaste(args []string) {
 	interval := fs.Duration("interval", 5*time.Second, "sampling interval")
 	utilThreshold := fs.Uint("util-threshold", 5, "flag GPUs with avg util below this percent")
 	memThreshold := fs.Uint("mem-threshold", 10, "flag GPUs with avg mem-used below this percent")
-	kubeconfig := fs.String("kubeconfig", "", "path to kubeconfig")
+	kubeconfig := fs.String("kubeconfig", "", "path to kubeconfig (default: $KUBECONFIG, then ~/.kube/config)")
 	hourlyRate := fs.Float64("hourly-rate", 0, "override USD/hour for every flagged GPU (ignores built-in table)")
 	_ = fs.Parse(args)
 
